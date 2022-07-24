@@ -1,3 +1,7 @@
+using System.Reflection;
+using PropertySales.Application;
+using PropertySales.Application.Common.Mappings;
+using PropertySales.Application.Interfaces;
 using PropertySales.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +12,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+    config.AddProfile(new AssemblyMappingProfile(typeof(IPropertySalesDbContext).Assembly));
+});
+
+builder.Services.AddApplication();
+builder.Services.AddPersistence(builder.Configuration);
 
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {

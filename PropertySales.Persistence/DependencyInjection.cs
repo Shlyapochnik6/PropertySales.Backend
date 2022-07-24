@@ -15,7 +15,7 @@ public static class DependencyInjection
         services.AddDbContext<PropertySalesDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
-        });
+        }); 
 
         services.AddScoped<IPropertySalesDbContext>(provider => 
             provider.GetService<IPropertySalesDbContext>());
