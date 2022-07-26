@@ -32,6 +32,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+var app = builder.Build();
+
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
@@ -45,8 +47,6 @@ using (var scope = builder.Services.BuildServiceProvider().CreateScope())
         throw;
     }
 }
-
-var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
