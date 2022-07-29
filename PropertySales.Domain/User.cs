@@ -1,6 +1,8 @@
-﻿namespace PropertySales.Domain;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace PropertySales.Domain;
+
+public class User : IdentityUser<long>
 {
     public decimal Balance { get; set; }
 

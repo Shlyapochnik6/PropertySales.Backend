@@ -8,11 +8,13 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\PropertySales.Application\PropertySales.Application.csproj" />
+      <ProjectReference Include="..\PropertySales.Auth\PropertySales.SecureAuth.csproj" />
       <ProjectReference Include="..\PropertySales.Persistence\PropertySales.Persistence.csproj" />
     </ItemGroup>
 

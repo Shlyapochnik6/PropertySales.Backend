@@ -1,7 +1,10 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using PropertySales.Application;
 using PropertySales.Application.Common.Mappings;
 using PropertySales.Application.Interfaces;
+using PropertySales.SecureAuth;
+using PropertySales.Domain;
 using PropertySales.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +24,18 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddSecurity(builder.Configuration);
+
+builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
+}).AddEntityFrameworkStores<PropertySalesDbContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -59,6 +74,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
