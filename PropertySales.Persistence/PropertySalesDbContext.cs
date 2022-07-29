@@ -1,4 +1,6 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PropertySales.Application.Interfaces;
 using PropertySales.Domain;
@@ -6,7 +8,7 @@ using PropertySales.Persistence.EntityTypeConfigurations;
 
 namespace PropertySales.Persistence;
 
-public class PropertySalesDbContext : DbContext, IPropertySalesDbContext
+public class PropertySalesDbContext : IdentityDbContext<User, IdentityRole<long>, long>, IPropertySalesDbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
