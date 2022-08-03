@@ -18,7 +18,7 @@ public static class DependencyInjection
         }); 
 
         services.AddScoped<IPropertySalesDbContext>(provider => 
-            provider.GetService<IPropertySalesDbContext>());
+            provider.GetService<PropertySalesDbContext>());
 
         return services;
     }
