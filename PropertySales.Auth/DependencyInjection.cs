@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +24,8 @@ public static class DependencyInjection
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
                     IssuerSigningKey = key,
                     ValidIssuer = configuration["JWT:Issuer"],
                     ValidAudience = configuration["JWT:Audience"]
@@ -31,6 +33,8 @@ public static class DependencyInjection
             });
 
         services.AddScoped<IJwtGenerator, JwtGenerator>();
+
+        services.AddMediatR(Assembly.GetExecutingAssembly());
 
         return services;
     }
