@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using PropertySales.Application.Common.Exceptions;
@@ -7,7 +8,7 @@ using PropertySales.SecureAuth.Interfaces;
 
 namespace PropertySales.SecureAuth.Queries.Login;
 
-public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
+public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticatedResponse>
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -22,7 +23,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
         _jwtGenerator = jwtGenerator;
     }
 
-    public async Task<UserDto> Handle(LoginQuery loginQuery, CancellationToken cancellationToken)
+    public async Task<AuthenticatedResponse> Handle(LoginQuery loginQuery, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(loginQuery.Email);
 
@@ -36,12 +37,21 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
 
         if (result.Succeeded)
         {
-            return new UserDto()
+            var refreshToken = _jwtGenerator.CreateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            await _userManager.UpdateAsync(user);
+
+            return new AuthenticatedResponse()
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
+                Balance = user.Balance,
                 Token = _jwtGenerator.CreateToken(user),
-                Balance = 0
+                RefreshToken = user.RefreshToken
             };
         }
 
