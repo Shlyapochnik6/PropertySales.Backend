@@ -10,6 +10,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.Property(user => user.Balance).IsRequired();
         
+        builder.Property(u => u.RefreshToken).IsRequired(false);
+        builder.Property(u => u.RefreshTokenExpiryTime).IsRequired(false);
+        
         builder.HasMany(user => user.Purchases)
             .WithOne(purchase => purchase.User);
     }

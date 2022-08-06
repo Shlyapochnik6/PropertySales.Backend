@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using PropertySales.Application;
 using PropertySales.Application.Common.Mappings;
@@ -26,6 +27,16 @@ builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddSecurity(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+    });
+});
+
 builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
 {
     options.Password.RequireDigit = false;
@@ -37,14 +48,10 @@ builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
     options.SignIn.RequireConfirmedEmail = false;
 }).AddEntityFrameworkStores<PropertySalesDbContext>();
 
-builder.Services.AddCors(options =>
+builder.Services.AddAuthentication(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
-    });
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 });
 
 var app = builder.Build();
