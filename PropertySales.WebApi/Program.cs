@@ -8,6 +8,8 @@ using PropertySales.Application.Interfaces;
 using PropertySales.SecureAuth;
 using PropertySales.Domain;
 using PropertySales.Persistence;
+using PropertySales.Persistence.Contexts;
+using PropertySales.Persistence.Initializers;
 using PropertySales.WebApi.Middlewares;
 
 var logger = NLog.LogManager.Setup()
@@ -16,7 +18,6 @@ logger.Debug("Init main");
 
 try
 {
-
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers();
@@ -70,9 +71,13 @@ try
         {
             var context = serviceProvider.GetRequiredService<PropertySalesDbContext>();
             DbInitializer.Initialize(context);
+
+            var logContext = serviceProvider.GetRequiredService<LogDbContext>();
+            LogDbInitializer.Initialize(logContext);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
+            logger.Error(ex, "Stopped on account of error - {ex}", ex);
             throw;
         }
     }

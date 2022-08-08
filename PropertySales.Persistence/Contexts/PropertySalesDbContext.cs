@@ -6,7 +6,7 @@ using PropertySales.Application.Interfaces;
 using PropertySales.Domain;
 using PropertySales.Persistence.EntityTypeConfigurations;
 
-namespace PropertySales.Persistence;
+namespace PropertySales.Persistence.Contexts;
 
 public class PropertySalesDbContext : IdentityDbContext<User, IdentityRole<long>, long>, IPropertySalesDbContext
 {

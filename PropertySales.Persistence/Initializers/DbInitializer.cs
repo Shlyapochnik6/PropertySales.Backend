@@ -1,4 +1,6 @@
-﻿namespace PropertySales.Persistence;
+﻿using PropertySales.Persistence.Contexts;
+
+namespace PropertySales.Persistence.Initializers;
 
 public class DbInitializer
 {
