@@ -8,6 +8,7 @@ using PropertySales.Application.Interfaces;
 using PropertySales.SecureAuth;
 using PropertySales.Domain;
 using PropertySales.Persistence;
+using PropertySales.WebApi.Middlewares;
 
 var logger = NLog.LogManager.Setup()
     .LoadConfigurationFromFile("nlog.config", false).GetCurrentClassLogger();
@@ -82,6 +83,8 @@ try
         app.UseSwaggerUI();
     }
 
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    
     app.UseHttpsRedirection();
 
     app.UseCors("AllowAll");
