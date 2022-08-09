@@ -2,21 +2,23 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using NLog;
+using NLog.Web;
 using PropertySales.Application;
 using PropertySales.Application.Common.Mappings;
 using PropertySales.Application.Interfaces;
 using PropertySales.SecureAuth;
 using PropertySales.Domain;
 using PropertySales.Persistence;
+using PropertySales.Persistence.Contexts;
+using PropertySales.Persistence.Initializers;
 using PropertySales.WebApi.Middlewares;
 
 var logger = NLog.LogManager.Setup()
-    .LoadConfigurationFromFile("nlog.config", false).GetCurrentClassLogger();
+    .LoadConfigurationFromFile("NLog.config", false).GetCurrentClassLogger();
 logger.Debug("Init main");
 
 try
 {
-
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers();
@@ -60,6 +62,9 @@ try
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     });
+    
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
 
     var app = builder.Build();
 
@@ -70,9 +75,13 @@ try
         {
             var context = serviceProvider.GetRequiredService<PropertySalesDbContext>();
             DbInitializer.Initialize(context);
+
+            var logContext = serviceProvider.GetRequiredService<LogDbContext>();
+            LogDbInitializer.Initialize(logContext);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
+            logger.Error(ex, "Stopped on account of error - {ex}", ex);
             throw;
         }
     }
