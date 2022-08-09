@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using NLog;
+using NLog.Web;
 using PropertySales.Application;
 using PropertySales.Application.Common.Mappings;
 using PropertySales.Application.Interfaces;
@@ -13,7 +14,7 @@ using PropertySales.Persistence.Initializers;
 using PropertySales.WebApi.Middlewares;
 
 var logger = NLog.LogManager.Setup()
-    .LoadConfigurationFromFile("nlog.config", false).GetCurrentClassLogger();
+    .LoadConfigurationFromFile("NLog.config", false).GetCurrentClassLogger();
 logger.Debug("Init main");
 
 try
@@ -61,6 +62,9 @@ try
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     });
+    
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
 
     var app = builder.Build();
 
