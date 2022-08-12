@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.CreateHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.DeleteHouseType;
+using PropertySales.Application.CommandsQueries.HouseType.Commands.UpdateHouseType;
 using PropertySales.Application.Interfaces;
 using PropertySales.WebApi.Models.HouseType;
 
@@ -34,6 +35,17 @@ public class HouseTypeController : BaseController
             Id = id
         };
         await Mediator.Send(deleteHouseTypeCommand);
+
+        return NoContent();
+    }
+
+    [HttpPut("update-house-type/{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateHouseTypeDto dto)
+    {
+        var updateHouseTypeCommand = _mapper.Map<UpdateHouseTypeCommand>(dto);
+        updateHouseTypeCommand.Id = id;
+
+        await Mediator.Send(updateHouseTypeCommand);
 
         return NoContent();
     }
