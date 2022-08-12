@@ -4,6 +4,7 @@ using PropertySales.Application.CommandsQueries.HouseType.Commands.CreateHouseTy
 using PropertySales.Application.CommandsQueries.HouseType.Commands.DeleteHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.UpdateHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Queries.GetHouseType;
+using PropertySales.Application.CommandsQueries.HouseType.Queries.GetListHouseTypes;
 using PropertySales.Application.Interfaces;
 using PropertySales.WebApi.Models.HouseType;
 
@@ -31,6 +32,15 @@ public class HouseTypeController : BaseController
         return Ok(houseTypeVm);
     }
 
+    [HttpGet("get-all")]
+    public async Task<ActionResult<IEnumerable<HouseTypeDto>>> GetAll()
+    {
+        var getListHouseTypeQuery = new GetListHouseTypeQuery();
+        var listHouseTypeVm = await Mediator.Send(getListHouseTypeQuery);
+
+        return Ok(listHouseTypeVm.HouseTypes);
+    }
+    
     [HttpPost("add-house-type")]
     public async Task<ActionResult<long>> Create([FromBody] CreateHouseTypeDto dto)
     {
