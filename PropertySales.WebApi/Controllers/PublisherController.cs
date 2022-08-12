@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.CreatePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePublisher;
+using PropertySales.Application.CommandsQueries.Publisher.Commands.UpdatePublisher;
 using PropertySales.WebApi.Models.Publisher;
 
 namespace PropertySales.WebApi.Controllers;
@@ -34,6 +35,17 @@ public class PublisherController : BaseController
         };
         await Mediator.Send(deletePublisherCommand);
 
+        return NoContent();
+    }
+
+    [HttpPut("update-publisher/{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdatePublisherDto dto)
+    {
+        var updatePublisherCommand = _mapper.Map<UpdatePublisherCommand>(dto);
+        updatePublisherCommand.Id = id;
+        
+        await Mediator.Send(updatePublisherCommand);
+        
         return NoContent();
     }
 }

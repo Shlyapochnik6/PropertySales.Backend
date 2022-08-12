@@ -3,28 +3,29 @@ using Microsoft.EntityFrameworkCore;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
-namespace PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePublisher;
+namespace PropertySales.Application.CommandsQueries.Publisher.Commands.UpdatePublisher;
 
-public class DeletePublisherCommandHandler : IRequestHandler<DeletePublisherCommand, Unit>
+public class UpdatePublisherCommandHandler : IRequestHandler<UpdatePublisherCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
 
-    public DeletePublisherCommandHandler(IPropertySalesDbContext dbContext)
+    public UpdatePublisherCommandHandler(IPropertySalesDbContext dbContext)
     {
         _dbContext = dbContext;
     }
     
-    public async Task<Unit> Handle(DeletePublisherCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdatePublisherCommand request, CancellationToken cancellationToken)
     {
         var publisher = await _dbContext.Publishers
             .FirstOrDefaultAsync(publisher => publisher.Id == request.Id, cancellationToken);
 
         if (publisher == null)
             throw new NotFoundException(nameof(Domain.Publisher), request.Id);
-        
-        _dbContext.Publishers.Remove(publisher);
+
+        publisher.Name = request.Name;
+
         await _dbContext.SaveChangesAsync(cancellationToken);
-        
+            
         return Unit.Value;
     }
 }
