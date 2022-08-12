@@ -16,10 +16,10 @@ public class CreatePublisherCommandHandler : IRequestHandler<CreatePublisherComm
     
     public async Task<long> Handle(CreatePublisherCommand request, CancellationToken cancellationToken)
     {
-        var isNameRight = await _dbContext.Publishers
+        var nameCopy = await _dbContext.Publishers
             .AnyAsync(publisher => publisher.Name == request.Name, cancellationToken);
 
-        if (isNameRight)
+        if (nameCopy)
             throw new RecordExistsException(request.Name);
         
         var publisher = new Domain.Publisher()
