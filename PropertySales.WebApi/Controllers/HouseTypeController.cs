@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.CreateHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.DeleteHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.UpdateHouseType;
+using PropertySales.Application.CommandsQueries.HouseType.Queries.GetHouseType;
 using PropertySales.Application.Interfaces;
 using PropertySales.WebApi.Models.HouseType;
 
@@ -16,6 +17,18 @@ public class HouseTypeController : BaseController
     public HouseTypeController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet("get-house-type/{id:long}")]
+    public async Task<ActionResult<HouseTypeVm>> Get(long id)
+    {
+        var getHouseTypeQuery = new GetHouseTypeQuery()
+        {
+            Id = id
+        };
+        var houseTypeVm = await Mediator.Send(getHouseTypeQuery);
+
+        return Ok(houseTypeVm);
     }
 
     [HttpPost("add-house-type")]
