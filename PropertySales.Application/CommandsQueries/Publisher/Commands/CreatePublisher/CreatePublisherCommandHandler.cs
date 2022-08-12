@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
 namespace PropertySales.Application.CommandsQueries.Publisher.Commands.CreatePublisher;
@@ -15,6 +16,12 @@ public class CreatePublisherCommandHandler : IRequestHandler<CreatePublisherComm
     
     public async Task<long> Handle(CreatePublisherCommand request, CancellationToken cancellationToken)
     {
+        var isNameRight = await _dbContext.Publishers
+            .AnyAsync(publisher => publisher.Name == request.Name, cancellationToken);
+
+        if (isNameRight)
+            throw new RecordExistsException(request.Name);
+        
         var publisher = new Domain.Publisher()
         {
             Name = request.Name
