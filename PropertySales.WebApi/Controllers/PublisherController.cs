@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.CreatePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.UpdatePublisher;
+using PropertySales.Application.CommandsQueries.Publisher.Queries.GetPublisher;
 using PropertySales.WebApi.Models.Publisher;
 
 namespace PropertySales.WebApi.Controllers;
@@ -15,6 +16,18 @@ public class PublisherController : BaseController
     public PublisherController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet("get-publisher/{id:long}")]
+    public async Task<ActionResult<PublisherVm>> Get(long id)
+    {
+        var getPublisherQuery = new GetPublisherQuery()
+        {
+            Id = id
+        };
+        var publisherVm = await Mediator.Send(getPublisherQuery);
+
+        return Ok(publisherVm);
     }
 
     [HttpPost("add-publisher")]

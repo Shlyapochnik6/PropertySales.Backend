@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CommandsQueries\Publisher\Queries" />
+      <Folder Include="CommandsQueries\Publisher\Queries\GetListPublishers" />
     </ItemGroup>
 
 </Project>
