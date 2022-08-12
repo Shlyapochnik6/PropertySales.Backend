@@ -16,6 +16,13 @@ public class UpdatePublisherCommandHandler : IRequestHandler<UpdatePublisherComm
     
     public async Task<Unit> Handle(UpdatePublisherCommand request, CancellationToken cancellationToken)
     {
+        var publisherRecord = await _dbContext.Publishers
+            .AnyAsync(publisher => publisher.Name == request.Name &&
+                                   publisher.Id != request.Id, cancellationToken);
+        
+        if (publisherRecord)
+            throw new RecordExistsException(request.Name);
+        
         var publisher = await _dbContext.Publishers
             .FirstOrDefaultAsync(publisher => publisher.Id == request.Id, cancellationToken);
 
