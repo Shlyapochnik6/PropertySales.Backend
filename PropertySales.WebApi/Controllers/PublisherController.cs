@@ -9,7 +9,7 @@ using PropertySales.WebApi.Models.Publisher;
 
 namespace PropertySales.WebApi.Controllers;
 
-[Route("api/publisher")]
+[Route("api/publishers")]
 public class PublisherController : BaseController
 {
     private readonly IMapper _mapper;

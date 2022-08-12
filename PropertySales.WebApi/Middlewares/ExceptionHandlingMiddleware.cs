@@ -32,6 +32,10 @@ public class ExceptionHandlingMiddleware
         {
             await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
         }
+        catch (RecordExistsException ex)
+        {
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
+        }
         catch (NotFoundException ex)
         {
             await HandleExceptionAsync(httpContext, ex, HttpStatusCode.NotFound);
