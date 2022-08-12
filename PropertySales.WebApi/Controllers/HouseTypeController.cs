@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.CreateHouseType;
+using PropertySales.Application.CommandsQueries.HouseType.Commands.DeleteHouseType;
 using PropertySales.Application.Interfaces;
 using PropertySales.WebApi.Models.HouseType;
 
@@ -23,5 +24,17 @@ public class HouseTypeController : BaseController
         var houseTypeId = await Mediator.Send(createHouseTypeCommand);
 
         return Created("api/house-types", houseTypeId);
+    }
+
+    [HttpDelete("delete-house-type/{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var deleteHouseTypeCommand = new DeleteHouseTypeCommand()
+        {
+            Id = id
+        };
+        await Mediator.Send(deleteHouseTypeCommand);
+
+        return NoContent();
     }
 }
