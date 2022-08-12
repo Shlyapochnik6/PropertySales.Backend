@@ -11,6 +11,7 @@ public class PublisherConfiguration : IEntityTypeConfiguration<Publisher>
         builder.HasKey(publisher => publisher.Id);
         builder.HasIndex(publisher => publisher.Id).IsUnique();
 
+        builder.HasIndex(publisher => publisher.Name).IsUnique();
         builder.Property(publisher => publisher.Name).IsRequired().HasMaxLength(255);
 
         builder.HasMany(publisher => publisher.Houses)

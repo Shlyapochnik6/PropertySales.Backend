@@ -18,4 +18,10 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="CommandsQueries\Publisher\Commands\DeletePublisher" />
+      <Folder Include="CommandsQueries\Publisher\Commands\UpdatePublisher" />
+      <Folder Include="CommandsQueries\Publisher\Queries" />
+    </ItemGroup>
+
 </Project>

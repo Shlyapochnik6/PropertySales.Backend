@@ -10,6 +10,8 @@ public class HouseTypeConfiguration : IEntityTypeConfiguration<HouseType>
     {
         builder.HasKey(houseType => houseType.Id);
         builder.HasIndex(houseType => houseType.Id).IsUnique();
+
+        builder.HasIndex(houseType => houseType.Name).IsUnique();
         
         builder.Property(houseType => houseType.Name).IsRequired().HasMaxLength(255);
         
