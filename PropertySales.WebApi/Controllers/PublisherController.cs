@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.CreatePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.UpdatePublisher;
+using PropertySales.Application.CommandsQueries.Publisher.Queries.GetListPublishers;
 using PropertySales.Application.CommandsQueries.Publisher.Queries.GetPublisher;
 using PropertySales.WebApi.Models.Publisher;
 
@@ -28,6 +29,15 @@ public class PublisherController : BaseController
         var publisherVm = await Mediator.Send(getPublisherQuery);
 
         return Ok(publisherVm);
+    }
+
+    [HttpGet("get-all")]
+    public async Task<ActionResult<GetListPublisherVm>> GetAll()
+    {
+        var getListPublisherQuery = new GetListPublisherQuery();
+        var listPublisherVm = await Mediator.Send(getListPublisherQuery);
+
+        return Ok(listPublisherVm.Publishers);
     }
 
     [HttpPost("add-publisher")]
