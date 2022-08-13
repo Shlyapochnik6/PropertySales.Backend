@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <Folder Include="CommandsQueries\Location\Queries\GetListLocation" />
-      <Folder Include="CommandsQueries\Location\Queries\GetLocation" />
     </ItemGroup>
 
 </Project>
