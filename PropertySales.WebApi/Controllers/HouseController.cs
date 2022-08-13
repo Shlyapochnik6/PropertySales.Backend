@@ -4,6 +4,7 @@ using PropertySales.Application.CommandsQueries.House.Commands.CreateHouse;
 using PropertySales.Application.CommandsQueries.House.Commands.DeleteHouse;
 using PropertySales.Application.CommandsQueries.House.Commands.UpdateHouse;
 using PropertySales.Application.CommandsQueries.House.Queries.GetHouse;
+using PropertySales.Application.CommandsQueries.House.Queries.GetListHouses;
 using PropertySales.WebApi.Models.House;
 
 namespace PropertySales.WebApi.Controllers;
@@ -28,6 +29,15 @@ public class HouseController : BaseController
         var houseVm = await Mediator.Send(getHouseQuery);
 
         return Ok(houseVm);
+    }
+
+    [HttpGet("get-all")]
+    public async Task<ActionResult<IEnumerable<HouseDto>>> GetAll()
+    {
+        var getListHouseQuery = new GetListHouseQuery();
+        var listHouseVm = await Mediator.Send(getListHouseQuery);
+
+        return Ok(listHouseVm.Houses);
     }
     
     [HttpPost("add-house")]
