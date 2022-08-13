@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Location.Commands.CreateLocation;
+using PropertySales.Application.CommandsQueries.Location.Commands.DeleteLocation;
 using PropertySales.WebApi.Models.Location;
 
 namespace PropertySales.WebApi.Controllers;
@@ -22,5 +23,17 @@ public class LocationController : BaseController
         var locationId = await Mediator.Send(createLocationCommand);
 
         return Created("api/locations", locationId);
+    }
+
+    [HttpDelete("delete-location/{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var deleteLocationCommand = new DeleteLocationCommand()
+        {
+            Id = id
+        };
+        await Mediator.Send(deleteLocationCommand);
+
+        return NoContent();
     }
 }
