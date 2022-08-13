@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.House.Commands.CreateHouse;
 using PropertySales.Application.CommandsQueries.House.Commands.DeleteHouse;
 using PropertySales.Application.CommandsQueries.House.Commands.UpdateHouse;
+using PropertySales.Application.CommandsQueries.House.Queries.GetHouse;
 using PropertySales.WebApi.Models.House;
 
 namespace PropertySales.WebApi.Controllers;
@@ -17,6 +18,18 @@ public class HouseController : BaseController
         _mapper = mapper;
     }
 
+    [HttpGet("get-house/{id:long}")]
+    public async Task<ActionResult<HouseVm>> Get(long id)
+    {
+        var getHouseQuery = new GetHouseQuery()
+        {
+            Id = id
+        };
+        var houseVm = await Mediator.Send(getHouseQuery);
+
+        return Ok(houseVm);
+    }
+    
     [HttpPost("add-house")]
     public async Task<ActionResult<long>> Create([FromBody] CreateHouseCommand house)
     {
