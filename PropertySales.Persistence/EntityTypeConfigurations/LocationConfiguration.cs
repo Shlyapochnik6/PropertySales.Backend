@@ -11,8 +11,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasKey(location => location.Id);
         builder.HasIndex(location => location.Id).IsUnique();
 
-        builder.Property(location => location.Name).IsRequired().HasMaxLength(255);
-
+        builder.Property(location => location.Country).IsRequired().HasMaxLength(255);
+        builder.Property(location => location.City).IsRequired().HasMaxLength(255);
+        builder.Property(location => location.Street).IsRequired().HasMaxLength(255);
+        
         builder.HasMany(location => location.Houses)
             .WithOne(house => house.Location);
     }
