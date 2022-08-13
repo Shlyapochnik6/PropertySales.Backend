@@ -9,7 +9,7 @@ using PropertySales.WebApi.Models.House;
 
 namespace PropertySales.WebApi.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("api/houses")]
+[Route("api/houses")]
 public class HouseController : BaseController
 {
     private readonly IMapper _mapper;
