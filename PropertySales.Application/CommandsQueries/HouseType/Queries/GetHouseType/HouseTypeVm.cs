@@ -8,7 +8,7 @@ public class HouseTypeVm : IMapWith<Domain.HouseType>
 {
     public long Id { get; set; }
     public string Name { get; set; }
-    public List<House> Houses { get; set; }
+    public List<Domain.House> Houses { get; set; }
 
     public void Mapping(Profile profile)
     {

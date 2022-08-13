@@ -18,4 +18,11 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="CommandsQueries\House\Commands\DeleteHouse" />
+      <Folder Include="CommandsQueries\House\Commands\UpdateHouse" />
+      <Folder Include="CommandsQueries\House\Queries\GetHouse" />
+      <Folder Include="CommandsQueries\House\Queries\GetListHouses" />
+    </ItemGroup>
+
 </Project>
