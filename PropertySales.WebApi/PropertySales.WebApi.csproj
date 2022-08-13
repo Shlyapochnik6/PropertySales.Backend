@@ -23,8 +23,4 @@
       <ProjectReference Include="..\PropertySales.Persistence\PropertySales.Persistence.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Models\House" />
-    </ItemGroup>
-
 </Project>
