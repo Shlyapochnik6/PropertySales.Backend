@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Location.Commands.CreateLocation;
 using PropertySales.Application.CommandsQueries.Location.Commands.DeleteLocation;
 using PropertySales.Application.CommandsQueries.Location.Commands.UpdateLocation;
+using PropertySales.Application.CommandsQueries.Location.Queries.GetListLocation;
 using PropertySales.Application.CommandsQueries.Location.Queries.GetLocation;
 using PropertySales.WebApi.Models.Location;
 
@@ -28,6 +29,15 @@ public class LocationController : BaseController
         var locationVm = await Mediator.Send(getLocationQuery);
 
         return Ok(locationVm);
+    }
+
+    [HttpGet("get-all")]
+    public async Task<ActionResult<IEnumerable<LocationDto>>> GetAll()
+    {
+        var getListLocationQuery = new GetListLocationQuery();
+        var lisLocationVm = await Mediator.Send(getListLocationQuery);
+
+        return Ok(lisLocationVm.Locations);
     }
     
     [HttpPost("add-location")]
