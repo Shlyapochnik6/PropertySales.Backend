@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Location.Commands.CreateLocation;
 using PropertySales.Application.CommandsQueries.Location.Commands.DeleteLocation;
+using PropertySales.Application.CommandsQueries.Location.Commands.UpdateLocation;
 using PropertySales.WebApi.Models.Location;
 
 namespace PropertySales.WebApi.Controllers;
@@ -33,6 +34,17 @@ public class LocationController : BaseController
             Id = id
         };
         await Mediator.Send(deleteLocationCommand);
+
+        return NoContent();
+    }
+
+    [HttpPut("update-location/{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateLocationDto dto)
+    {
+        var updateLocationCommand = _mapper.Map<UpdateLocationCommand>(dto);
+        updateLocationCommand.Id = id;
+
+        await Mediator.Send(updateLocationCommand);
 
         return NoContent();
     }
