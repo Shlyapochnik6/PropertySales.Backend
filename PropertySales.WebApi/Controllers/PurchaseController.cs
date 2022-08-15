@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PropertySales.Application.CommandsQueries.Purchase.Commands.BuyHouse;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.CreatePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.UpdatePurchase;
@@ -53,5 +54,17 @@ public class PurchaseController : BaseController
         await Mediator.Send(updatePurchaseCommand);
         
         return NoContent();
+    }
+
+    [HttpPost("buy-house/{id:long}")]
+    public async Task<ActionResult> Buy(long id, [FromBody] BuyHouseDto dto)
+    {
+        var buyHouseCommand = _mapper.Map<BuyHouseCommand>(dto);
+        buyHouseCommand.PurchaseId = id;
+        buyHouseCommand.UserId = UserId;
+
+        var purchaseId = Mediator.Send(buyHouseCommand);
+
+        return Ok(purchaseId);
     }
 }
