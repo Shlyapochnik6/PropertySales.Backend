@@ -35,9 +35,9 @@ public class LocationController : BaseController
     public async Task<ActionResult<IEnumerable<LocationDto>>> GetAll()
     {
         var getListLocationQuery = new GetListLocationQuery();
-        var lisLocationVm = await Mediator.Send(getListLocationQuery);
+        var listLocationVm = await Mediator.Send(getListLocationQuery);
 
-        return Ok(lisLocationVm.Locations);
+        return Ok(listLocationVm.Locations);
     }
     
     [HttpPost("add-location")]
