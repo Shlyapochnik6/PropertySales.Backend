@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.SecureAuth;
 using PropertySales.SecureAuth.Commands.RefreshToken;
 using PropertySales.SecureAuth.Commands.Registration;
+using PropertySales.SecureAuth.Commands.UpdateUser;
 using PropertySales.SecureAuth.Queries.Login;
+using PropertySales.WebApi.Models.User;
 
 namespace PropertySales.WebApi.Controllers;
 
@@ -41,5 +43,16 @@ public class UserController : BaseController
         var response = await Mediator.Send(command);
 
         return Ok(response);
+    }
+
+    [HttpPut("update-user")]
+    public async Task<ActionResult> Update([FromBody] UpdateUserDto dto)
+    {
+        var updateUserCommand = _mapper.Map<UpdateUserCommand>(dto);
+        updateUserCommand.Id = UserId;
+
+        await Mediator.Send(updateUserCommand);
+
+        return NoContent();
     }
 }
