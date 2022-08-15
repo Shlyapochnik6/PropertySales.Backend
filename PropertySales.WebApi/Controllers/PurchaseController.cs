@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.CreatePurchase;
+using PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurchase;
 using PropertySales.WebApi.Models.Purchase;
 
 namespace PropertySales.WebApi.Controllers;
@@ -26,5 +27,18 @@ public class PurchaseController : BaseController
         var purchaseId = await Mediator.Send(createPurchaseCommand);
 
         return Created("api/purchases", purchaseId);
+    }
+
+    [HttpDelete("delete-purchase/{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var deletePurchaseCommand = new DeletePurchaseCommand()
+        {
+            PurchaseId = id,
+            UserId = UserId
+        };
+        await Mediator.Send(deletePurchaseCommand);
+        
+        return NoContent();
     }
 }
