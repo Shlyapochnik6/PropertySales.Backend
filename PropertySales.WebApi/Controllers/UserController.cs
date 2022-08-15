@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PropertySales.Application.CommandsQueries.User.Commands.BalanceRefill;
 using PropertySales.SecureAuth;
 using PropertySales.SecureAuth.Commands.RefreshToken;
 using PropertySales.SecureAuth.Commands.Registration;
@@ -34,6 +35,19 @@ public class UserController : BaseController
     public async Task<ActionResult<AuthenticatedResponse>> Registration([FromBody] RegistrationCommand command)
     {
         return await Mediator.Send(command);
+    }
+
+    [HttpPatch("refill-balance/{money:decimal}")]
+    public async Task<ActionResult<string>> RefillBalance(decimal money)
+    {
+        var balanceRefillCommand = new BalanceRefillCommand()
+        {
+            UserId = UserId,
+            ReplenishmentAmount = money
+        };
+        var replenishmentAmount = await Mediator.Send(balanceRefillCommand);
+
+        return Ok(replenishmentAmount);
     }
 
     [AllowAnonymous]

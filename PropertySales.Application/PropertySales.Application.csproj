@@ -19,7 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CommandsQueries\User\Commands" />
       <Folder Include="CommandsQueries\User\Queries" />
     </ItemGroup>
 
