@@ -5,6 +5,7 @@ using PropertySales.Application.CommandsQueries.Purchase.Commands.BuyHouse;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.CreatePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.UpdatePurchase;
+using PropertySales.Application.CommandsQueries.Purchase.Queries.GetListPurchases;
 using PropertySales.Application.CommandsQueries.Purchase.Queries.GetPurchase;
 using PropertySales.WebApi.Models.Purchase;
 
@@ -43,6 +44,18 @@ public class PurchaseController : BaseController
         var purchaseId = await Mediator.Send(createPurchaseCommand);
 
         return Created("api/purchases", purchaseId);
+    }
+
+    [HttpGet("get-all")]
+    public async Task<ActionResult<IEnumerable<PurchaseDto>>> GetAll()
+    {
+        var getPurchaseListQuery = new GetPurchaseListQuery()
+        {
+            UserId = UserId
+        };
+        var listPurchaseVm = await Mediator.Send(getPurchaseListQuery);
+        
+        return Ok(listPurchaseVm.Purchases);
     }
 
     [HttpDelete("delete-purchase/{id:long}")]
