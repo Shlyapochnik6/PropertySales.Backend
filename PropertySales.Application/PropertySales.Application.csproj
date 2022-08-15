@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <Folder Include="CommandsQueries\Purchase\Commands\BuyHouse" />
-      <Folder Include="CommandsQueries\Purchase\Commands\UpdatePurchase" />
       <Folder Include="CommandsQueries\Purchase\Queries\GetListPurchases" />
       <Folder Include="CommandsQueries\Purchase\Queries\GetPurchase" />
     </ItemGroup>

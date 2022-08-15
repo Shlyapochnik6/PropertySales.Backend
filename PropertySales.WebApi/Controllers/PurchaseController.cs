@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.CreatePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurchase;
+using PropertySales.Application.CommandsQueries.Purchase.Commands.UpdatePurchase;
 using PropertySales.WebApi.Models.Purchase;
 
 namespace PropertySales.WebApi.Controllers;
@@ -38,6 +39,18 @@ public class PurchaseController : BaseController
             UserId = UserId
         };
         await Mediator.Send(deletePurchaseCommand);
+        
+        return NoContent();
+    }
+
+    [HttpPut("update-purchase/{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdatePurchaseDto dto)
+    {
+        var updatePurchaseCommand = _mapper.Map<UpdatePurchaseCommand>(dto);
+        updatePurchaseCommand.PurchaseId = id;
+        updatePurchaseCommand.UserId = UserId;
+
+        await Mediator.Send(updatePurchaseCommand);
         
         return NoContent();
     }
