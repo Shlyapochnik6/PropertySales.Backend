@@ -5,6 +5,7 @@ using PropertySales.Application.CommandsQueries.Purchase.Commands.BuyHouse;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.CreatePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurchase;
 using PropertySales.Application.CommandsQueries.Purchase.Commands.UpdatePurchase;
+using PropertySales.Application.CommandsQueries.Purchase.Queries.GetPurchase;
 using PropertySales.WebApi.Models.Purchase;
 
 namespace PropertySales.WebApi.Controllers;
@@ -19,7 +20,20 @@ public class PurchaseController : BaseController
     {
         _mapper = mapper;
     }
-    
+
+    [HttpGet("get-purchase/{id:long}")]
+    public async Task<ActionResult<PurchaseVm>> Get(long id)
+    {
+        var getPurchaseQuery = new GetPurchaseQuery()
+        {
+            Id = id,
+            UserId = UserId
+        };
+        var puchaseVm = await Mediator.Send(getPurchaseQuery);
+
+        return Ok(puchaseVm);
+    }
+
     [HttpPost("add-purchase")]
     public async Task<ActionResult<long>> Create([FromBody] CreatePurchaseDto dto)
     {
