@@ -4,6 +4,7 @@ using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.SetRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.UpdateRole;
+using PropertySales.Application.CommandsQueries.Role.Queries.GetListRoles;
 using PropertySales.Application.CommandsQueries.Role.Queries.GetRole;
 using PropertySales.WebApi.Models.Role;
 
@@ -29,6 +30,15 @@ public class RoleController : BaseController
         var roleVm = await Mediator.Send(getRoleQuery);
 
         return Ok(roleVm);
+    }
+
+    [HttpGet("get-all")]
+    public async Task<ActionResult<IEnumerable<RoleDto>>> GetAll()
+    {
+        var getListRoleQuery = new GetListRoleQuery();
+        var listRoleVm = await Mediator.Send(getListRoleQuery);
+
+        return Ok(listRoleVm.Roles);
     }
 
     [HttpPost("add-role")]
