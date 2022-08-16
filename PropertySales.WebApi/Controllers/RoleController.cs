@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.SetRole;
+using PropertySales.Application.CommandsQueries.Role.Commands.UpdateRole;
 using PropertySales.WebApi.Models.Role;
 
 namespace PropertySales.WebApi.Controllers;
@@ -33,6 +34,17 @@ public class RoleController : BaseController
             RoleId = id
         };
         await Mediator.Send(deleteRoleCommand);
+
+        return NoContent();
+    }
+
+    [HttpPut("update-role/{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateRoleDto dto)
+    {
+        var updateRoleCommand = _mapper.Map<UpdateRoleCommand>(dto);
+        updateRoleCommand.RoleId = id;
+
+        await Mediator.Send(updateRoleCommand);
 
         return NoContent();
     }
