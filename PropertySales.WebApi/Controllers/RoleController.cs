@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
+using PropertySales.Application.CommandsQueries.Role.Commands.SetRole;
+using PropertySales.WebApi.Models.Role;
 
 namespace PropertySales.WebApi.Controllers;
 
@@ -31,6 +33,15 @@ public class RoleController : BaseController
             RoleId = id
         };
         await Mediator.Send(deleteRoleCommand);
+
+        return NoContent();
+    }
+
+    [HttpPost("set-role")]
+    public async Task<ActionResult> SetRole([FromBody] SetRoleDto dto)
+    {
+        var setRoleCommand = _mapper.Map<SetRoleCommand>(dto);
+        await Mediator.Send(setRoleCommand);
 
         return NoContent();
     }
