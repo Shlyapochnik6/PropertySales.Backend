@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
+using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
 
 namespace PropertySales.WebApi.Controllers;
 
@@ -20,5 +21,17 @@ public class RoleController : BaseController
         var roleId = await Mediator.Send(role);
         
         return Created("api/roles", roleId);
+    }
+
+    [HttpDelete("delete-role/{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var deleteRoleCommand = new DeleteRoleCommand()
+        {
+            RoleId = id
+        };
+        await Mediator.Send(deleteRoleCommand);
+
+        return NoContent();
     }
 }
