@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.CreatePublisher;
 using PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePublisher;
@@ -9,6 +10,7 @@ using PropertySales.WebApi.Models.Publisher;
 
 namespace PropertySales.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/publishers")]
 public class PublisherController : BaseController
 {
@@ -18,7 +20,8 @@ public class PublisherController : BaseController
     {
         _mapper = mapper;
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-publisher/{id:long}")]
     public async Task<ActionResult<PublisherVm>> Get(long id)
     {
@@ -30,7 +33,8 @@ public class PublisherController : BaseController
 
         return Ok(publisherVm);
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-all")]
     public async Task<ActionResult<GetListPublisherVm>> GetAll()
     {

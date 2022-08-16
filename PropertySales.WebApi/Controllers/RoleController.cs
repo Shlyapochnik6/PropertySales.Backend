@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
@@ -10,6 +11,7 @@ using PropertySales.WebApi.Models.Role;
 
 namespace PropertySales.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/roles")]
 public class RoleController : BaseController
 {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.Location.Commands.CreateLocation;
 using PropertySales.Application.CommandsQueries.Location.Commands.DeleteLocation;
@@ -9,6 +10,7 @@ using PropertySales.WebApi.Models.Location;
 
 namespace PropertySales.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/locations")]
 public class LocationController : BaseController
 {
@@ -18,7 +20,8 @@ public class LocationController : BaseController
     {
         _mapper = mapper;
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-location/{id:long}")]
     public async Task<ActionResult<LocationVm>> Get(long id)
     {
@@ -30,7 +33,8 @@ public class LocationController : BaseController
 
         return Ok(locationVm);
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-all")]
     public async Task<ActionResult<IEnumerable<LocationDto>>> GetAll()
     {
