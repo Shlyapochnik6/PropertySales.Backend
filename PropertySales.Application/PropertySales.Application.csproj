@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CommandsQueries\Role\Queries" />
+      <Folder Include="CommandsQueries\Role\Queries\GetListRoles" />
     </ItemGroup>
 
 </Project>

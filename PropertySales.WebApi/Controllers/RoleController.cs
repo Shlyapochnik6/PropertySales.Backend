@@ -4,6 +4,7 @@ using PropertySales.Application.CommandsQueries.Role.Commands.CreateRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.DeleteRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.SetRole;
 using PropertySales.Application.CommandsQueries.Role.Commands.UpdateRole;
+using PropertySales.Application.CommandsQueries.Role.Queries.GetRole;
 using PropertySales.WebApi.Models.Role;
 
 namespace PropertySales.WebApi.Controllers;
@@ -16,6 +17,18 @@ public class RoleController : BaseController
     public RoleController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet("get-role/{id:long}")]
+    public async Task<ActionResult> Get(long id)
+    {
+        var getRoleQuery = new GetRoleQuery()
+        {
+            RoleId = id
+        };
+        var roleVm = await Mediator.Send(getRoleQuery);
+
+        return Ok(roleVm);
     }
 
     [HttpPost("add-role")]
