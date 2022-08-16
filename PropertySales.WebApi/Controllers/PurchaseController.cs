@@ -21,7 +21,8 @@ public class PurchaseController : BaseController
     {
         _mapper = mapper;
     }
-
+    
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-purchase/{id:long}")]
     public async Task<ActionResult<PurchaseVm>> Get(long id)
     {
@@ -34,18 +35,8 @@ public class PurchaseController : BaseController
 
         return Ok(puchaseVm);
     }
-
-    [HttpPost("add-purchase")]
-    public async Task<ActionResult<long>> Create([FromBody] CreatePurchaseDto dto)
-    {
-        var createPurchaseCommand = _mapper.Map<CreatePurchaseCommand>(dto);
-        createPurchaseCommand.UserId = UserId;
-
-        var purchaseId = await Mediator.Send(createPurchaseCommand);
-
-        return Created("api/purchases", purchaseId);
-    }
-
+    
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-all")]
     public async Task<ActionResult<IEnumerable<PurchaseDto>>> GetAll()
     {
@@ -56,6 +47,17 @@ public class PurchaseController : BaseController
         var listPurchaseVm = await Mediator.Send(getPurchaseListQuery);
         
         return Ok(listPurchaseVm.Purchases);
+    }
+
+    [HttpPost("add-purchase")]
+    public async Task<ActionResult<long>> Create([FromBody] CreatePurchaseDto dto)
+    {
+        var createPurchaseCommand = _mapper.Map<CreatePurchaseCommand>(dto);
+        createPurchaseCommand.UserId = UserId;
+
+        var purchaseId = await Mediator.Send(createPurchaseCommand);
+
+        return Created("api/purchases", purchaseId);
     }
 
     [HttpDelete("delete-purchase/{id:long}")]

@@ -37,7 +37,8 @@ public class UserController : BaseController
     {
         return await Mediator.Send(command);
     }
-
+    
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-user")]
     public async Task<ActionResult<UserVm>> Get()
     {

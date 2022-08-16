@@ -23,6 +23,7 @@ public class HouseTypeController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-house-type/{id:long}")]
     public async Task<ActionResult<HouseTypeVm>> Get(long id)
     {
@@ -36,6 +37,7 @@ public class HouseTypeController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-all")]
     public async Task<ActionResult<IEnumerable<HouseTypeDto>>> GetAll()
     {
