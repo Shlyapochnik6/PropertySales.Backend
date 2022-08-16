@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.CreateHouseType;
 using PropertySales.Application.CommandsQueries.HouseType.Commands.DeleteHouseType;
@@ -10,6 +11,7 @@ using PropertySales.WebApi.Models.HouseType;
 
 namespace PropertySales.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/house-types")]
 public class HouseTypeController : BaseController
 {
@@ -19,7 +21,8 @@ public class HouseTypeController : BaseController
     {
         _mapper = mapper;
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-house-type/{id:long}")]
     public async Task<ActionResult<HouseTypeVm>> Get(long id)
     {
@@ -31,7 +34,8 @@ public class HouseTypeController : BaseController
 
         return Ok(houseTypeVm);
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("get-all")]
     public async Task<ActionResult<IEnumerable<HouseTypeDto>>> GetAll()
     {
