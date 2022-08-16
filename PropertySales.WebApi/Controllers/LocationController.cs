@@ -22,6 +22,7 @@ public class LocationController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-location/{id:long}")]
     public async Task<ActionResult<LocationVm>> Get(long id)
     {
@@ -35,6 +36,7 @@ public class LocationController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-all")]
     public async Task<ActionResult<IEnumerable<LocationDto>>> GetAll()
     {

@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Web;
@@ -22,7 +23,21 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddControllers()
+    builder.Services.AddControllers(options =>
+        {
+            options.CacheProfiles.Add("Caching",
+                new CacheProfile()
+                {
+                    Duration = 300,
+                    Location = ResponseCacheLocation.Any
+                });
+            options.CacheProfiles.Add("NoCaching", 
+                new CacheProfile()
+                {
+                    Location = ResponseCacheLocation.None,
+                    NoStore = true
+                });
+        })
         .AddNewtonsoftJson(options =>
         {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -102,6 +117,8 @@ try
     app.UseHttpsRedirection();
 
     app.UseCors("AllowAll");
+    
+    app.UseResponseCaching();
 
     app.UseAuthentication();
     app.UseAuthorization();

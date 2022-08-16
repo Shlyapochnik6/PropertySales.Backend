@@ -22,6 +22,7 @@ public class PublisherController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-publisher/{id:long}")]
     public async Task<ActionResult<PublisherVm>> Get(long id)
     {
@@ -35,6 +36,7 @@ public class PublisherController : BaseController
     }
     
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("get-all")]
     public async Task<ActionResult<GetListPublisherVm>> GetAll()
     {
