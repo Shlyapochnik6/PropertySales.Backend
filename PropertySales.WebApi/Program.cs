@@ -130,7 +130,7 @@ try
 }
 catch(Exception ex)
 {
-    logger.Error(ex, "Stopped program because of exception");
+    logger.Error(ex, "The program was stopped because of an exception");
     throw;
 }
 finally

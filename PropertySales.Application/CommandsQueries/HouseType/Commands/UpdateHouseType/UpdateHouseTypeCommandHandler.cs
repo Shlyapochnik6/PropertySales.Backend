@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PropertySales.Application.Common.Caches;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
@@ -8,10 +9,13 @@ namespace PropertySales.Application.CommandsQueries.HouseType.Commands.UpdateHou
 public class UpdateHouseTypeCommandHandler : IRequestHandler<UpdateHouseTypeCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
+    private readonly ICacheManager<Domain.HouseType> _cacheManager;
 
-    public UpdateHouseTypeCommandHandler(IPropertySalesDbContext dbContext)
+    public UpdateHouseTypeCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.HouseType> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(UpdateHouseTypeCommand request, CancellationToken cancellationToken)
@@ -32,7 +36,10 @@ public class UpdateHouseTypeCommandHandler : IRequestHandler<UpdateHouseTypeComm
         houseType.Name = request.Name;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
+        
+        _cacheManager.CacheEntryOptions = CacheEntryOption.DefaultCacheEntry;
+        _cacheManager.ChangeCacheValue(request.Id, houseType);
+        
         return Unit.Value;
     }
 }

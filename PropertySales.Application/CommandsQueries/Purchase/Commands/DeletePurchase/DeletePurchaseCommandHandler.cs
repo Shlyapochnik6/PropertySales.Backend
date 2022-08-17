@@ -8,10 +8,13 @@ namespace PropertySales.Application.CommandsQueries.Purchase.Commands.DeletePurc
 public class DeletePurchaseCommandHandler : IRequestHandler<DeletePurchaseCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
+    private readonly ICacheManager<Domain.Purchase> _cacheManager;
 
-    public DeletePurchaseCommandHandler(IPropertySalesDbContext dbContext)
+    public DeletePurchaseCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Purchase> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(DeletePurchaseCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ public class DeletePurchaseCommandHandler : IRequestHandler<DeletePurchaseComman
 
         _dbContext.Purchases.Remove(purchase);
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.RemoveCacheValue(request.PurchaseId);
         
         return Unit.Value;
     }

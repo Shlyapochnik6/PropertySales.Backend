@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PropertySales.Application.Common.Caches;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
@@ -8,10 +9,13 @@ namespace PropertySales.Application.CommandsQueries.Location.Commands.UpdateLoca
 public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
-
-    public UpdateLocationCommandHandler(IPropertySalesDbContext dbContext)
+    private readonly ICacheManager<Domain.Location> _cacheManager;
+    
+    public UpdateLocationCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Location> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(UpdateLocationCommand request, CancellationToken cancellationToken)
@@ -42,6 +46,9 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
         location.Street = request.Street;
         
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.CacheEntryOptions = CacheEntryOption.DefaultCacheEntry;
+        _cacheManager.ChangeCacheValue(request.Id, location);
         
         return Unit.Value;
     }

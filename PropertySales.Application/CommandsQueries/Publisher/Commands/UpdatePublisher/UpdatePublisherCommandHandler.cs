@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PropertySales.Application.Common.Caches;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
@@ -8,10 +9,13 @@ namespace PropertySales.Application.CommandsQueries.Publisher.Commands.UpdatePub
 public class UpdatePublisherCommandHandler : IRequestHandler<UpdatePublisherCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
-
-    public UpdatePublisherCommandHandler(IPropertySalesDbContext dbContext)
+    private readonly ICacheManager<Domain.Publisher> _cacheManager;
+    
+    public UpdatePublisherCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Publisher> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(UpdatePublisherCommand request, CancellationToken cancellationToken)
@@ -32,6 +36,9 @@ public class UpdatePublisherCommandHandler : IRequestHandler<UpdatePublisherComm
         publisher.Name = request.Name;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.CacheEntryOptions = CacheEntryOption.DefaultCacheEntry;
+        _cacheManager.ChangeCacheValue(request.Id, publisher);
             
         return Unit.Value;
     }

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PropertySales.Application.CommandsQueries.Publisher.Queries.GetPublisher;
+using PropertySales.Application.Common.Caches;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
@@ -11,16 +12,19 @@ public class GetPurchaseQueryHandler : IRequestHandler<GetPurchaseQuery, Purchas
 {
     private readonly IPropertySalesDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly ICacheManager<Domain.Purchase> _cacheManager;
 
-    public GetPurchaseQueryHandler(IPropertySalesDbContext dbContext, IMapper mapper)
+    public GetPurchaseQueryHandler(IPropertySalesDbContext dbContext, IMapper mapper,
+        ICacheManager<Domain.Purchase> cacheManager)
     {
         _mapper = mapper;
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<PurchaseVm> Handle(GetPurchaseQuery request, CancellationToken cancellationToken)
     {
-        var purchase = await _dbContext.Purchases
+        var purchaseQuery = async () => await _dbContext.Purchases
             .Include(purchase => purchase.User)
             .Include(purchase => purchase.House)
                 .ThenInclude(purchase => purchase.Publisher)
@@ -30,11 +34,14 @@ public class GetPurchaseQueryHandler : IRequestHandler<GetPurchaseQuery, Purchas
                 .ThenInclude(purchase => purchase.Location)
             .FirstOrDefaultAsync(purchase => purchase.Id == request.Id &&
                                              purchase.User.Id == request.UserId, cancellationToken);
-
-        purchase.House.Purchases = null!;
-
-        if (purchase == null) 
+        
+        if (purchaseQuery == null) 
             throw new NotFoundException(nameof(Domain.Purchase), request.Id);
+
+        _cacheManager.CacheEntryOptions = CacheEntryOption.DefaultCacheEntry;
+        var purchase = await _cacheManager.GetOrSetCacheValue(request.Id, purchaseQuery);
+        
+        purchase.House.Purchases = null!;
 
         return _mapper.Map<PurchaseVm>(purchase);
     }

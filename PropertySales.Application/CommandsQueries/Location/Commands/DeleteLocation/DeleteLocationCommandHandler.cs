@@ -8,10 +8,13 @@ namespace PropertySales.Application.CommandsQueries.Location.Commands.DeleteLoca
 public class DeleteLocationCommandHandler : IRequestHandler<DeleteLocationCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
+    private readonly ICacheManager<Domain.Location> _cacheManager;
 
-    public DeleteLocationCommandHandler(IPropertySalesDbContext dbContext)
+    public DeleteLocationCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Location> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(DeleteLocationCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ public class DeleteLocationCommandHandler : IRequestHandler<DeleteLocationComman
         
         _dbContext.Locations.Remove(location);
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.RemoveCacheValue(request.Id);
         
         return Unit.Value;
     }
