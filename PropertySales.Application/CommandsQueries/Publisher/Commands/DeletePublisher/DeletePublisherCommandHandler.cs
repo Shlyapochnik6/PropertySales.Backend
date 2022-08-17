@@ -8,10 +8,13 @@ namespace PropertySales.Application.CommandsQueries.Publisher.Commands.DeletePub
 public class DeletePublisherCommandHandler : IRequestHandler<DeletePublisherCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
-
-    public DeletePublisherCommandHandler(IPropertySalesDbContext dbContext)
+    private readonly ICacheManager<Domain.Publisher> _cacheManager;
+    
+    public DeletePublisherCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Publisher> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(DeletePublisherCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ public class DeletePublisherCommandHandler : IRequestHandler<DeletePublisherComm
         
         _dbContext.Publishers.Remove(publisher);
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.RemoveCacheValue(request.Id);
         
         return Unit.Value;
     }

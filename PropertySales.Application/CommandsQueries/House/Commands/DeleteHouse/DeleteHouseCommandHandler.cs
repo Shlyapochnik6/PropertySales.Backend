@@ -8,10 +8,13 @@ namespace PropertySales.Application.CommandsQueries.House.Commands.DeleteHouse;
 public class DeleteHouseCommandHandler : IRequestHandler<DeleteHouseCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
-
-    public DeleteHouseCommandHandler(IPropertySalesDbContext dbContext)
+    private readonly ICacheManager<Domain.House> _cacheManager;
+    
+    public DeleteHouseCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.House> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(DeleteHouseCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ public class DeleteHouseCommandHandler : IRequestHandler<DeleteHouseCommand, Uni
         
         _dbContext.Houses.Remove(house);
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.RemoveCacheValue(request.Id);
         
         return Unit.Value;
     }

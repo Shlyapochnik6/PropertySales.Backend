@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PropertySales.Application.Common.Caches;
 using PropertySales.Application.Common.Exceptions;
 using PropertySales.Application.Interfaces;
 
@@ -8,10 +9,13 @@ namespace PropertySales.Application.CommandsQueries.Purchase.Commands.UpdatePurc
 public class UpdatePurchaseCommandHandler : IRequestHandler<UpdatePurchaseCommand, Unit>
 {
     private readonly IPropertySalesDbContext _dbContext;
-
-    public UpdatePurchaseCommandHandler(IPropertySalesDbContext dbContext)
+    private readonly ICacheManager<Domain.Purchase> _cacheManager;
+    
+    public UpdatePurchaseCommandHandler(IPropertySalesDbContext dbContext,
+        ICacheManager<Domain.Purchase> cacheManager)
     {
         _dbContext = dbContext;
+        _cacheManager = cacheManager;
     }
     
     public async Task<Unit> Handle(UpdatePurchaseCommand request, CancellationToken cancellationToken)
@@ -30,6 +34,9 @@ public class UpdatePurchaseCommandHandler : IRequestHandler<UpdatePurchaseComman
         purchase.House = house;
         
         await _dbContext.SaveChangesAsync(cancellationToken);
+        
+        _cacheManager.CacheEntryOptions = CacheEntryOption.DefaultCacheEntry;
+        _cacheManager.ChangeCacheValue(purchase.Id, purchase);
         
         return Unit.Value;
     }
