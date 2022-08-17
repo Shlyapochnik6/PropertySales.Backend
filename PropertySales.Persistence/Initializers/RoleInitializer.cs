@@ -5,7 +5,7 @@ namespace PropertySales.Persistence.Initializers;
 
 public class RoleInitializer
 {
-    public static async Task CreateAdminUser(RoleManager<IdentityRole<long>> roleManager,
+    public static async Task InitializerAsync(RoleManager<IdentityRole<long>> roleManager,
         UserManager<User> userManager)
     {
         if (await roleManager.FindByNameAsync("Admin") == null)
