@@ -98,6 +98,12 @@ try
 
             var logContext = serviceProvider.GetRequiredService<LogDbContext>();
             LogDbInitializer.Initialize(logContext);
+            
+            var userManager = scope.ServiceProvider
+                .GetRequiredService<UserManager<User>>();
+            var rolesManager = scope.ServiceProvider
+                .GetRequiredService<RoleManager<IdentityRole<long>>>();
+            await RoleInitializer.InitializerAsync(rolesManager, userManager);
         }
         catch (Exception ex)
         {
