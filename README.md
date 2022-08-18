@@ -1,4 +1,4 @@
-<h1 align="center">PropertySales.Backend - ASP.NET Web API Project</h1>
+<h1>PropertySales.Backend - ASP.NET Web API Project</h1>
 
 <div>
     <p>
